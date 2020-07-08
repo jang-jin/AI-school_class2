@@ -1,38 +1,5 @@
 {
-	"students": [
-		{
-			"id": 1,
-			"userid": "wkdwls98",
-			"password": "1234",
-			"name": "장진",
-			"age": 28
-		},
-		{
-			"id": 2,
-			"userid": "sdf",
-			"password": "1234",
-			"name": "JJ",
-			"age": 10
-		}
-	],
-	"promises": [
-		{
-			"id": 1,
-			"content": "굳"
-		},
-		{
-			"id": 2,
-			"content": "good"
-		}
-	],
-	"interests": [
-		{
-			"id": 1,
-			"content": "구레잇"
-		},
-		{
-			"id": 2,
-			"content": "great"
-		}
-	]
+	"students": [],
+	"promises": [],
+	"interests": []
 }

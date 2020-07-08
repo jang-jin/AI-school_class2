@@ -3,16 +3,29 @@ from getpass import getpass
 
 path = 'D:/Python/AI-school/0708project3login+sqlite/students.json'
 
+# 초기 json 파일 만들기
+def make_data():
+    with open(path, 'w') as make_file:
+        json_data = {}
+        json_data['students'] = []
+        json_data['promises'] = []
+        json_data['interests'] = []
+        json.dump(json_data, make_file, ensure_ascii=False, indent="\t")
+
 # json 파일 읽어오기
 def load_data():
-    with open(path, 'r') as f:
-        json_data = json.load(f)
-    return json_data
+    try:
+        with open(path, 'r') as f:
+            json_data = json.load(f)
+        return json_data
+    except:
+        make_data()
+        load_data()
 
 # json 파일 저장하기
 def save_data(json_data):
-  with open(path, 'w') as make_file:
-    json.dump(json_data, make_file, indent="\t")
+    with open(path, 'w') as make_file:
+        json.dump(json_data, make_file, ensure_ascii=False, indent="\t")
 
 # 12자 이하 아이디 비밀번호 받기
 def input_12_char_below(input_type):
@@ -39,7 +52,11 @@ def join():
     json_data = load_data()
 
     student = {}
-    student['id'] = json_data['students'][-1]['id'] + 1
+
+    try:
+        student['id'] = json_data['students'][-1]['id'] + 1
+    except:
+        student['id'] = 1
 
     while True:
         student['userid'] = input_12_char_below("아이디")
