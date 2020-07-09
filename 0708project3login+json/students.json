@@ -1,0 +1,38 @@
+{
+	"students": [
+		{
+			"id": 1,
+			"userid": "a",
+			"password": "1234",
+			"name": "장진",
+			"age": 28
+		},
+		{
+			"id": 2,
+			"userid": "b",
+			"password": "1234",
+			"name": "장지니",
+			"age": 19
+		}
+	],
+	"promises": [
+		{
+			"id": 1,
+			"content": "화이팅"
+		},
+		{
+			"id": 2,
+			"content": "ㅠㅠ"
+		}
+	],
+	"interests": [
+		{
+			"id": 1,
+			"content": "인공지능"
+		},
+		{
+			"id": 2,
+			"content": "빅데이터"
+		}
+	]
+}
