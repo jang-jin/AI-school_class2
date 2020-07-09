@@ -1,8 +1,32 @@
 # TODO_0 : csv 모듈 불러오기
-import csv
+import sqlite3
 
-path = "D:/Python/AI-school/0709project4login+csv/students.csv"
+path = "D:/Python/AI-school/0709project4login+csv/students.db"
 
+def create_db():
+    conn = sqlite3.connect(path)
+    cur = conn.cursor()
+    sql = """create table students (
+        id text,
+        pw text
+    )"""
+    cur.execute(sql)
+    conn.close()
+
+def insert_db(id, pw):
+    conn = sqlite3.connect(path)
+    cur = conn.cursor()
+    sql = "insert into students values (?, ?)"
+    cur.execute(sql, (id, pw))
+    conn.commit()
+    conn.close()
+
+def select_all_db():
+    conn = sqlite3.connect(path)
+    cur = conn.cursor()
+    sql = "select * from students"
+    cur.execute(sql)
+    return cur
 
 def user_input():
     try:
@@ -19,18 +43,17 @@ def user_input():
 # 3. 비밀번호도 맞으면 로그인성공 출력하기
 
 def signin(id, pw):
-    with open(path, 'r', encoding='utf-8') as csv_file:
-        students_csv = csv.reader(csv_file)
-        exist = False
-        for student in students_csv:
-            if student[0] == id:
-                exist = True
-                if student[1] == pw:
-                    print("로그인 성공!!")
-                else:
-                    print("비밀번호가 틀렸습니다!")
-        if not exist:
-            print("존재하지 않는 아이디입니다.")
+    students_db = select_all_db()
+    exist = False
+    for student in students_db:
+        if student[0] == id:
+            exist = True
+            if student[1] == pw:
+                print("로그인 성공!!")
+            else:
+                print("비밀번호가 틀렸습니다!")
+    if not exist:
+        print("존재하지 않는 아이디입니다.")
 
 # TODO_2 : csvfile 에 유저가 존재하는지 확인하는 함수 구현해서 호출하기
 # 1. 아이디를 기준으로 존재하는 유저인지 확인
@@ -39,42 +62,33 @@ def signin(id, pw):
 
 def check_exist_id():
     while True:
-        with open(path, 'r', encoding='utf-8') as csv_file:
-            students_csv = csv.reader(csv_file)
-            id = input("아이디 : \n")
-            exist = False
-            for student in students_csv:
-                if student[0] == id:
-                    exist = True
-            if exist:
-                print("이미 존재하는 아이디입니다.")
-                continue
-            else:
-                return id
+        students_db = select_all_db()
+        id = input("아이디 : \n")
+        exist = False
+        for student in students_db:
+            if student[0] == id:
+                exist = True
+        if exist:
+            print("이미 존재하는 아이디입니다.")
+            continue
+        else:
+            return id
 
 # TODO_3 : csvfile 에 등록되어있는 형태로 유저 등록하는 함수 구현하기
 # 1. 아이디와 비밀번호를 그냥 데이터로 받아서 추가해보기
 # 2. 아이디와 비밀번호를 '딕셔너리' 형태로 받아서 추가해보기 (프로그래밍 실력의 기본은 구글링! 최대한 구글링 해보세요!!)
 
-# def signup(id, pw):
-#     with open(path, 'a', encoding='utf-8', newline='') as csv_file:
-#         wr = csv.writer(csv_file)
-#         wr.writerow([id, pw])
-
-def signup(dict_user):
-    with open(path, 'a', encoding='utf-8', newline='') as csv_file:
-        wr = csv.DictWriter(csv_file, fieldnames=['id','pw'])
-        wr.writerow(dict_user)
+def signup(id, pw):
+    insert_db(id, pw)
 
 def userlist():
     print("현재 존재하는 유저 :")
 
     # TODO_4 : csvfile 에서 현재 가입되어 있는 유저 전부 출력하기
 
-    with open(path, 'r', encoding='utf-8') as csv_file:
-        students_csv = csv.reader(csv_file)
-        for student in students_csv:
-            print(student[0])
+    students_db = select_all_db()
+    for student in students_db:
+        print(student[0])
 
 def exitcheck():
     stop = int(input("\n계속하시려면 0, 종료하시려면 1을 눌러주세요. : "))
@@ -85,7 +99,7 @@ def exitcheck():
 
 
 def start():
-    print('csv 로 데이터 다루기 로그인 예제')
+    print('sqlite 로 데이터 다루기 로그인 예제')
 
     signup_or_login = input('1 - 로그인 / 2 - 회원가입 : \n')
 
@@ -100,19 +114,14 @@ def start():
         id = check_exist_id()
         pw = input("비밀번호 : \n")
 
-        dict_user = {
-            "id": id,
-            "pw": pw
-        }
-        # signup(id, pw)
-        signup(dict_user)
+        signup(id, pw)
         userlist()
     else:
         print("올바른 숫자를 입력하세요!")
 
     exitcheck()
 
-
+#create_db()
 start()
 
 # TODO_7 : 깃헙에 업로드하고 깃헙 주소 제출!
