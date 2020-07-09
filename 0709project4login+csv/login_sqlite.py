@@ -27,6 +27,7 @@ def select_all_db():
     sql = "select * from students"
     cur.execute(sql)
     return cur
+# sqlite 의 경우 select문을 함수로 만들면 언제 db를 close 해야되니!
 
 def user_input():
     try:
