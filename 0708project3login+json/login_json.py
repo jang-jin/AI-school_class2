@@ -1,7 +1,7 @@
 import json
 from getpass import getpass
 
-path = 'D:/Python/AI-school/0708project3login+sqlite/students.json'
+path = './students.json'
 
 # 초기 json 파일 만들기
 def make_data():
@@ -43,17 +43,14 @@ def input_12_char_below(input_type):
     else:
         return input_data.lower()
 
-# 중복 체크
+# 중복 체크 check
 def duplicate_check(json_data, input_data):
-    json_data
     students = json_data['students']
-    if students:
-        for student in students:
-            if student['userid'] == input_data:
-                print('이미 존재하는 id입니다. 다시 입력해주세요!')
-                return True
-    else:
-        return False
+    for student in students:
+        if student['userid'] == input_data:
+            print('이미 존재하는 id입니다. 다시 입력해주세요!')
+            return True
+    return False
 
 # 회원가입
 def join():
@@ -123,10 +120,10 @@ def login():
             userpw = input_12_char_below("비밀번호")
             if student['password'] == userpw:
                 print(f"\n{student['name']}님 환영합니다!!\n")
-                return student['id']
+                service_main(student['id'])
             else:
                 print("잘못된 비밀번호입니다!")
-                break
+            break
         elif student['id'] == len(students):
             print("존재하지 않는 아이디입니다!")
 
@@ -137,7 +134,6 @@ def mypage(user_id):
     for student in json_data['students']:
         if student['id'] == user_id:
             print(f"아이디:{student['userid']}")
-            print(f"비밀번호:{student['password']}")
             print(f"이름:{student['name']}")
             print(f"나이:{student['age']}")
     
@@ -162,7 +158,8 @@ def anotherpage(user_id):
             index += 1
 
     index = int(input("자세히볼 다른 유저를 선택하세요 : \n"))
-    
+    mypage(user_ids[index-1])
+
 # 서비스 메인
 def service_main(user_id):
     while True:
@@ -170,24 +167,12 @@ def service_main(user_id):
         if menu == "1" :
             mypage(user_id)
         elif menu == "2" :
-        students_name = []
-        index = 1
-        for student in students:
-            if student['id'] != user_id:
-            print(f"{index}. {student['name']}")
-            students_name.append([student['name'],student['id']])
-            index += 1
-
-        index = int(input("자세히볼 다른 유저를 선택하세요 : \n"))
-        for student in students:
-            if student['id'] == students_name[index-1][1]:
-            print(f"아이디:{student['id']}\n이름:{student['name']}\n앞으로 5개월 동안의 다짐:{student['promise']}\n관심분야:{student['interests']}\n")
-        # elif menu == 3 :
-        # print("로그아웃되었습니다.")
-        # break
+            anotherpage(user_id)
+        elif menu == "3" :
+            print("로그아웃되었습니다.")
+            break
         else :
-            print("잘못된 명령어입니다.")
-
+            print("잘못된 명령어입니다.\n")
 
 def main():
     print("="*50)
@@ -198,8 +183,7 @@ def main():
         if menu == "1":
             join()
         elif menu == "2":
-            user_id = login()
-            service_main(user_id)
+            login()
         elif menu == "3":
             print("프로그램을 종료합니다.")
             break
